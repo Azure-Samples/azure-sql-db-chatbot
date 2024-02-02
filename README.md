@@ -67,7 +67,7 @@ In order to send to GPT only the relevant products, so that it can provide bette
 
 ### Use GPT to ask questions about the products
 
-Now that the most similar products to the search text are found, you can use the GPT model to ask questions about the products. Use the `./07-07-chat-with-data.sql` to ask questions about the products. Azure SQL will connect to OpenAI via REST call, so replace the `<OPENAI_URL>` with the OpenAI URL endpoint used before. 
+Now that the most similar products to the search text are found, you can use the GPT model to ask questions about the products. Use the `./07-chat-with-data.sql` to ask questions about the products. Azure SQL will connect to OpenAI via REST call, so replace the `<OPENAI_URL>` with the OpenAI URL endpoint used before. 
 
 Note the how the prompt is telling the AI model how to behave and how it should expect the data to be structured. 
 
