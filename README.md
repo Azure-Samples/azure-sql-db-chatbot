@@ -1,4 +1,8 @@
-# Project Name
+# Azure SQL DB - Retrieval Augmented Generation (RAG) with OpenAI
+
+In this repo you will find a step-by-step guide on how to use Azure SQL Database to do Retrieval Augmented Generation (RAG) using the data you have in Azure SQL and integrating with OpenAI, directly from the Azure SQL database itself. You'll be able to ask queries in natural language and get answers from the OpenAI GPT model, using the data you have in Azure SQL Database.
+
+![Azure SQL DB - Retrieval Augmented Generation (RAG) with OpenAI](./assets/azure-sql-rag.png)
 
 ## Step-by-step guide
 
