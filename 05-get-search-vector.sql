@@ -10,7 +10,7 @@ set @payload = json_object('input': @text);
 -- Call to OpenAI to get the embedding of the search text
 begin try
     exec @retval = sp_invoke_external_rest_endpoint
-        @url = 'https://<OPENAI_URL>.openai.azure.com/openai/deployments/embeddings/embeddings?api-version=2023-03-15-preview',
+        @url = '<OPENAI_URL>/openai/deployments/embeddings/embeddings?api-version=2023-03-15-preview',
         @method = 'POST',
         @credential = [https://<OPENAI_URL>.openai.azure.com],
         @payload = @payload,

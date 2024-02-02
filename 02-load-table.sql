@@ -24,7 +24,7 @@ go
 */
 create database scoped credential [openai_playground]
 with identity = 'SHARED ACCESS SIGNATURE',
-secret = ''; -- make sure not to include the ? at the beginning
+secret = '<SAS_TOKEN>'; -- make sure not to include the ? at the beginning
 go
 create external data source [openai_playground]
 with 

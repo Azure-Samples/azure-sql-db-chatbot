@@ -1,4 +1,4 @@
-declare @text nvarchar(max) = 'show me the best products for a cleaning the kitchen'
+declare @text nvarchar(max) = 'What are some good products to organize a birthday party for teenager boy?'
 declare @top int = 50
 declare @min_similarity decimal(19,16) = 0.75
 
@@ -9,9 +9,9 @@ set @payload = json_object('input': @text);
 -- Call to OpenAI to get the embedding of the search text
 begin try
     exec @retval = sp_invoke_external_rest_endpoint
-        @url = 'https://<OPENAI_URL>.openai.azure.com/openai/deployments/embeddings/embeddings?api-version=2023-03-15-preview',
+        @url = '<OPENAI_URL>/openai/deployments/embeddings/embeddings?api-version=2023-03-15-preview',
         @method = 'POST',
-        @credential = [https://<OPENAI_URL>.openai.azure.com],
+        @credential = [<OPENAI_URL>],
         @payload = @payload,
         @response = @response output;
 end try
@@ -121,10 +121,10 @@ json_object(
 );
 
 exec @retval = sp_invoke_external_rest_endpoint
-    @url = 'https://<OPENAI_URL>.openai.azure.com/openai/deployments/gpt-4-32k/chat/completions?api-version=2023-07-01-preview',
+    @url = '<OPENAI_URL>/openai/deployments/gpt-4-32k/chat/completions?api-version=2023-07-01-preview',
     @headers = '{"Content-Type":"application/json"}',
     @method = 'POST',
-    @credential = [https://<OPENAI_URL>.openai.azure.com],
+    @credential = [<OPENAI_URL>],
     @timeout = 120,
     @payload = @payload2,
     @response = @response output;

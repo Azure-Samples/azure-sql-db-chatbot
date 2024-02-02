@@ -45,10 +45,10 @@ json_object(
 --select @payload
 declare @retval int, @response nvarchar(max);
 exec @retval = sp_invoke_external_rest_endpoint
-    @url = 'https://<OPENAI_URL>.openai.azure.com/openai/deployments/gpt-4-32k/chat/completions?api-version=2023-07-01-preview',
+    @url = '<OPENAI_URL>/openai/deployments/gpt-4-32k/chat/completions?api-version=2023-07-01-preview',
     @headers = '{"Content-Type":"application/json"}',
     @method = 'POST',
-    @credential = [https://<OPENAI_URL>.openai.azure.com],
+    @credential = [<OPENAI_URL>],
     @timeout = 120,
     @payload = @payload2,
     @response = @response output;
