@@ -1,3 +1,4 @@
+create database Walmart
 drop table if exists [dbo].[walmart_ecommerce_product_details]
 create table [dbo].[walmart_ecommerce_product_details]
 (
@@ -19,3 +20,4 @@ create table [dbo].[walmart_ecommerce_product_details]
 	[embedding] [nvarchar](max) null
 )
 go
+

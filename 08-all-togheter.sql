@@ -9,9 +9,9 @@ set @payload = json_object('input': @text);
 -- Call to OpenAI to get the embedding of the search text
 begin try
     exec @retval = sp_invoke_external_rest_endpoint
-        @url = '<OPENAI_URL>/openai/deployments/embeddings/embeddings?api-version=2023-03-15-preview',
+        @url = 'https://infoasst-aoai-076mi.openai.azure.com/openai/deployments/text-embedding-ada-002/embeddings?api-version=2023-03-15-preview',
         @method = 'POST',
-        @credential = [<OPENAI_URL>],
+        @credential = [https://infoasst-aoai-076mi.openai.azure.com/],
         @payload = @payload,
         @response = @response output;
 end try
@@ -121,10 +121,10 @@ json_object(
 );
 
 exec @retval = sp_invoke_external_rest_endpoint
-    @url = '<OPENAI_URL>/openai/deployments/gpt-4-32k/chat/completions?api-version=2023-07-01-preview',
+    @url = 'https://infoasst-aoai-076mi.openai.azure.com/openai/deployments/gpt-4-32k/chat/completions?api-version=2023-07-01-preview',
     @headers = '{"Content-Type":"application/json"}',
     @method = 'POST',
-    @credential = [<OPENAI_URL>],
+    @credential = [https://infoasst-aoai-076mi.openai.azure.com/],
     @timeout = 120,
     @payload = @payload2,
     @response = @response output;

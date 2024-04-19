@@ -45,15 +45,15 @@ json_object(
 --select @payload
 declare @retval int, @response nvarchar(max);
 exec @retval = sp_invoke_external_rest_endpoint
-    @url = '<OPENAI_URL>/openai/deployments/gpt-4-32k/chat/completions?api-version=2023-07-01-preview',
+    @url = 'https://infoasst-aoai-076mi.openai.azure.com/openai/deployments/gpt-4-32k/chat/completions?api-version=2023-07-01-preview',
     @headers = '{"Content-Type":"application/json"}',
     @method = 'POST',
-    @credential = [<OPENAI_URL>],
+    @credential = [https://infoasst-aoai-076mi.openai.azure.com/],
     @timeout = 120,
     @payload = @payload2,
     @response = @response output;
 
---select @response;
+select @response;
 
 drop table if exists #j;
 select * into #j from openjson(@response, '$.result.choices') c;

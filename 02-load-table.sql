@@ -24,13 +24,13 @@ go
 */
 create database scoped credential [openai_playground]
 with identity = 'SHARED ACCESS SIGNATURE',
-secret = '<SAS_TOKEN>'; -- make sure not to include the ? at the beginning
+secret = '?sv=2021-10-04&st=2024-04-19T19%3A34%3A10Z&se=2025-04-20T19%3A34%3A00Z&sr=b&sp=r&sig=EL3pi4Hf8A7pd9NraDIUmybBl8nTTMJi4NkMfDFqlzU%3D'; -- make sure not to include the ? at the beginning
 go
 create external data source [openai_playground]
 with 
 ( 
 	type = blob_storage,
- 	location = 'https://<STORAGE_ACCOUNT>.blob.core.windows.net/playground',
+ 	location = 'https://pvlab2c5eb4adls.blob.core.windows.net/playground',
  	credential = [openai_playground]
 );
 go
@@ -56,5 +56,5 @@ go
 /*
 	Add indexes
 */
-create unique clustered index ixc on dbo.[walmart_ecommerce_product_details](id)
+create unique clustered index ixc on [dbo].[walmart_ecommerce_product_details](id)
 go
