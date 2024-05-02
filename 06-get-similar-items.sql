@@ -8,6 +8,10 @@ cross apply
     openjson(json_query(response, '$.result.data[0].embedding'))
 go
 
+-- How many products overall?
+select count(*) from dbo.[walmart_ecommerce_product_details]
+go
+
 -- Similarity Search
 drop table if exists dbo.similar_items
 declare @top int = 50

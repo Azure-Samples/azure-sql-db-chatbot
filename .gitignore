@@ -400,3 +400,4 @@ FodyWeavers.xsd
 # Custom
 .env
 embeddings/
+*.local.sql
