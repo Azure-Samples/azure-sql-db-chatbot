@@ -13,7 +13,7 @@ The **native option** is to use the new Vector Functions, recently introduced in
 > [!NOTE]  
 > Vector Functions are in Early Adopter Preview. Get access to the preview via https://aka.ms/azuresql-vector-eap-announcement
 
-![](_assets/azure-sql-cosine-similarity-native.gif)
+![](assets/azure-sql-cosine-similarity-native.gif)
 
 The **classic option** is to use the classic T-SQL to perform vector operations, with the support for columnstore indexes for getting good performances.
 
