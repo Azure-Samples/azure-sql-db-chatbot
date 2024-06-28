@@ -4,6 +4,22 @@ In this repo you will find a step-by-step guide on how to use Azure SQL Database
 
 ![Azure SQL DB - Retrieval Augmented Generation (RAG) with OpenAI](./assets/azure-sql-rag.png)
 
+# Classic or Native?
+
+Azure SQL database can be used to easily and quickly perform vector similarity search. There are two options for this: a native option and a classic option.
+
+The **native option** is to use the new Vector Functions, recently introduced in Azure SQL database. Vector Functions are a set of functions that can be used to perform vector operations directly in the database. 
+
+> [!NOTE]  
+> Vector Functions are in Early Adopter Preview. Get access to the preview via https://aka.ms/azuresql-vector-eap-announcement
+
+![](_assets/azure-sql-cosine-similarity-native.gif)
+
+The **classic option** is to use the classic T-SQL to perform vector operations, with the support for columnstore indexes for getting good performances.
+
+> [!IMPORTANT]  
+> This branch (the `main` branch) uses the native vector support in Azure SQL. If you want to use the classic T-SQL, switch to the `classic` branch.
+
 ## Step-by-step guide
 
 ### Create the Azure SQL Database

@@ -37,45 +37,27 @@ create table #r (response nvarchar(max));
 insert into #r (response) values (@response);
 
 -- Similarity Search
-drop table if exists #s;
-with cteVector as
-(
-    select 
-        cast([key] as int) as [vector_value_id],
-        cast([value] as float) as [vector_value]
-    from 
-        #r
-    cross apply
-        openjson(json_query(response, '$.result.data[0].embedding'))
-),
-cteSimilar as
-(
-    select 
-        v2.[id],         
-        sum(v1.[vector_value] * v2.[vector_value]) as cosine_similarity
-    from 
-        cteVector v1
-    inner join 
-        dbo.[walmart_ecommerce_product_details_embeddings_vectors] v2 on v1.vector_value_id = v2.vector_value_id
-    group by
-        v2.[id]
+declare @qv varbinary(8000) = (
+	select top(1)
+		json_array_to_vector(json_query(response, '$.result.data[0].embedding')) as query_vector
+	from 
+		#r
 )
+drop table if exists #s;
 select top(@top)    
-    r.cosine_similarity,
+    vector_distance('cosine', @qv, p.embedding) as distance,
     p.id,
     p.[Product_Name],
     p.[Description],
     p.Category
 into
     #s
-from 
-    cteSimilar r
-inner join
-    dbo.[walmart_ecommerce_product_details] p on r.[id] = p.[id]
+from
+    dbo.[walmart_ecommerce_product_details] p 
 where
-    cosine_similarity >= @min_similarity
+    vector_distance('cosine', @qv, embedding) <= 1 - @min_similarity
 order by    
-    r.cosine_similarity desc;
+    distance;
 ;
 
 declare @payload2 nvarchar(max);
