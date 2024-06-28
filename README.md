@@ -69,9 +69,9 @@ Run the script to create the HTTP Credential.
 
 The HTTP Crential will be safely stored in the Azure SQL Database and will be used to access the OpenAI API without exposing the API Key.
 
-### Store vectors in a columnstore
+### Store vectors in native binary format
 
-To allow effienct searching of the vectors, create a columnstore index on the `embedding` column. Use the `./04-extract-vectors-into-columnstore.sql` to create the columnstore index. More details on this tecnique are explained here: [Vector Similarity Search with Azure SQL database and OpenAI](https://devblogs.microsoft.com/azure-sql/vector-similarity-search-with-azure-sql-database-and-openai/)
+To allow effienct searching of the vectors, vectors must be converted from the text format to the binary format. Use the `./04-convert-to-native-vectors.sql` to store the vectors in the binary format. Run the script to store the vectors in the binary format.
 
 ### Transform the search text into a vector using OpenAI
 
