@@ -2,14 +2,14 @@
     Create a column to store the embeddings as a native vector format.
 */
 alter table dbo.[walmart_ecommerce_product_details]
-add embedding_vector varbinary(8000)
+add embedding_vector vector(1536)
 go
 
 /*
     Convert the JSON array to a native vector format.
 */
 update dbo.[walmart_ecommerce_product_details]
-set embedding_vector = json_array_to_vector(embedding)
+set embedding_vector = cast(embedding as vector(1536))
 go
 
 /*

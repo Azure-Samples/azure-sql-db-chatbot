@@ -37,9 +37,9 @@ create table #r (response nvarchar(max));
 insert into #r (response) values (@response);
 
 -- Similarity Search
-declare @qv varbinary(8000) = (
+declare @qv vector(1536) = (
 	select top(1)
-		json_array_to_vector(json_query(response, '$.result.data[0].embedding')) as query_vector
+		cast(json_query(response, '$.result.data[0].embedding') as vector(1536)) as query_vector
 	from 
 		#r
 )
