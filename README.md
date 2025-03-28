@@ -54,7 +54,7 @@ Run each section (each section starts with a comment) separately. At the end of 
 Make sure you have an [Azure OpenAI](https://learn.microsoft.com/en-us/azure/ai-services/openai/overview) resource created in your Azure subscription. Withi the OpenAI resource create two models:
 
 - `embeddings`, using the `text-embedding-ada-002` model
-- `gpt-4`, using the `gpt-4` model
+- `gpt-4o`, using the `gpt-4o` model (minimum version required: 2024-08-06 as [structured output is needed](https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/structured-outputs?tabs=python-secure%2Cdotnet-entra-id&pivots=programming-language-python#supported-models))
 
 Then get the OpenAI URL Endpoint and API Key as they will be needed in the next step.
 
@@ -88,42 +88,41 @@ Now that the most similar products to the search text are found, you can use the
 Note the how the prompt is telling the AI model how to behave and how it should expect the data to be structured. 
 
 ```
-You as a system assistant who helps users find ideas to organize birthday parties using the products that are provided to you.
-Products will be provided in an assistant message in the format of "Id=>Product=>Description". You can use this information to help you answer the user's question.
+Products are provided in an assitant message using a JSON Array with the following format: [{id, name, description}].
 ```
 
 The prompt also clearly specifies what results are expected from the AI model. 
 
-```
-You answer needs to be a json object with the following format.
-{
-    "answer": // the answer to the question, add a source reference to the end of each sentence. Source referece is the product Id.
-    "products": // a comma-separated list of product ids that you used to come up with the answer.
-    "thoughts": // brief thoughts on how you came up with the answer, e.g. what sources you used, what you thought about, etc.
-}
-```
+The first script `07-chat-with-data.sql` will return the result as a natural language text, that is ideal if you are building a chatbot experience. The second script `08-chat-with-data-structured-output.sql` will return the result in JSON format, using the new "structured output" feature availale in the latest LLM models.
 
 Run the script to ask questions about the products. Here's an example of a question and the answer from the AI model:
 
 ```
-What are some good products to organize a birthday party for teenager boy?
+what are the best products for organizing a birthday party for a teenager girl?
 ```
 
-and the asnwser (restructed from JSON format) is
+and the answser (restructed from JSON format) is
 
 ```
-Answer:
-For a teenager boy's birthday party, some good products to consider might include the '2018 Megaloon Set' (ID: 1329) for decoration. This set includes large Mylar balloons that can be filled with helium. You can also consider the 'Red Plastic Party Tablecloth' (ID: 27782) for an easy and fuss-free table setting. The 'Birthdays For Him Luxury Topper Set, A4' (ID: 20133) would be a great addition for cake decoration. If the party is going to be held at night, the 'Stargazer Laser Light Show Projector' (ID: 11767) would be a fun way to create a festive atmosphere. Do not forget to send 'Teenage Mutant Ninja Turtles Thank-You Notes' (ID: 25453) to the guests after the party (source: ID: 25453).
+Here are the top ten products that would be great for organizing a birthday party for a teenage girl:
 
-Thoughts:
-I selected products that would cater to a teenager's interests and that would help create a fun and festive atmosphere for the party. The balloons and laser light show projector add a fun element, while the tablecloth and cake topper set help with the practical aspects of party planning. The thank-you notes are a thoughtful touch for after the party.
+1. **Princess Candle Set - Party Supplies** 
+(Thoughts: This set includes cute candles in the shape of a heart, star, and tiara, perfect for adding a touch of elegance to the birthday cake.)
+
+2. **Birthday Party Filled Favor Box (Each)** 
+(Thoughts: This favor box comes filled with fun items like a glitter bounce ball and blueberry rock candy stick, making it a delightful gift for party guests.)
+
+3. **Girls Dress Up Kids Crafts Hair Kit** 
+(Thoughts: This kit allows for creative fun with hair accessories, perfect for a party activity where guests can make their own unique hairpieces.)
+
+4. **50 Pink Plastic Plates, Cups, and Napkins Set** 
+(Thoughts: This vibrant pink tableware set is perfect for serving food and drinks to guests, adding a splash of color to the party.)
+
+...
 ```
 
 Impressive! Everything happened on your own data, and right in the Azure SQL Database.
 
-## Unified script
-
-There is no need to keep all the steps separated as done in the step-by-step guide. The steps can be combined into a single script and run in a single go. The script with unified steps is available in the `./08-all-togehter.sql` file.
 
 ## Conclusion
 

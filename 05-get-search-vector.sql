@@ -34,6 +34,8 @@ if (@retval != 0) begin
 end;
 
 drop table if exists dbo.http_response;
-create table dbo.http_response (response nvarchar(max));
+create table dbo.http_response (response json);
 insert into dbo.http_response (response) values (@response);
-select @response;
+
+select * from dbo.http_response
+

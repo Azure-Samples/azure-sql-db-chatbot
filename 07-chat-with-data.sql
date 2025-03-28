@@ -1,65 +1,69 @@
-declare @text nvarchar(max) = 'what are the best products for organizing a birthday party for a teenager girl?'
+declare @request nvarchar(max) = 'what are the best products for organizing a birthday party for a teenager girl?'
 
-declare @payload2 nvarchar(max);
-select 
-    @payload2 = string_agg(cast(id as varchar(10)) +'=>' + [product_name] + '=>' + [description], char(13) + char(10))
-from 
-    dbo.similar_items;
-
-set @payload2 = 
-json_object(
-    'messages': json_array(
+declare @products json =
+(
+    select 
+        json_arrayagg(
             json_object(
-                'role':'system',
-                'content':'
-                    You as a system assistant who helps users find ideas to organize birthday parties using the products that are provided to you.
-                    Products will be provided in an assistant message in the format of "Id=>Product=>Description". You can use this information to help you answer the user''s question.
-                '
-            ),
-            json_object(
-                'role':'user',
-                'content': '## Source ##
-                    ' + @payload2 + '
-                    ## End ##
-
-                    You answer needs to be a json object with the following format.
-                    {
-                        "answer": // the answer to the question, add a source reference to the end of each sentence. Source referece is the product Id.
-                        "products": // a comma-separated list of product ids that you used to come up with the answer.
-                        "thoughts": // brief thoughts on how you came up with the answer, e.g. what sources you used, what you thought about, etc.
-                    }'
-            ),
-            json_object(
-                'role':'user',
-                'content': + @text
+                'id': [id],
+                'name': [product_name],
+                'description' : [description]
             )
-    ),
-    'max_tokens': 800,
-    'temperature': 0.7,
+        )
+    from 
+        dbo.similar_items
+)
+
+declare @prompt nvarchar(max) = json_object(
+    'messages': json_array(
+        json_object(
+            'role':'system',
+            'content':'
+                You as a system assistant who helps users find the best products available in the catalog to satesfy the requested ask.
+                Products are provided in an assitant message using a JSON Array with the following format: [{id, name, description}].                 
+                Use only the provided products to help you answer the question.        
+                Use only the information available in the provided JSON to answer the question.
+                Return the top ten products that best answer the question.
+                For each returned produce add a short explanation of why the product has been suggested. Put the explanation in parentheis and start with "Thoughts:"
+                Make sure to use details, notes, and description that are provided in each product are used only with that product.                
+                If the question cannot be answered by the provided samples, don''t return any result.
+                If asked question is about topics you don''t know, don''t return any result.
+                If no products are provided, don''t return any result.                
+            '
+        ),
+        json_object(
+            'role':'assistant',
+            'content': 'The available products are the following:'
+            ),
+        json_object(
+            'role':'assistant',
+            'content': coalesce(cast(@products as nvarchar(max)), '')
+            ),
+        json_object(
+            'role':'user',
+            'content': @request
+        )
+    ),    
+    'temperature': 0.2,
     'frequency_penalty': 0,
-    'presence_penalty': 0,
-    'top_p': 0.95,
+    'presence_penalty': 0,    
     'stop': null
 );
 
 --select @payload
 declare @retval int, @response nvarchar(max);
 exec @retval = sp_invoke_external_rest_endpoint
-    @url = '<OPENAI_URL>/openai/deployments/gpt-4-32k/chat/completions?api-version=2023-07-01-preview',
+    @url = '<OPENAI_URL>/openai/deployments/gpt-4o/chat/completions?api-version=2024-08-01-preview',
     @headers = '{"Content-Type":"application/json"}',
     @method = 'POST',
     @credential = [<OPENAI_URL>],
     @timeout = 120,
-    @payload = @payload2,
-    @response = @response output;
+    @payload = @prompt,
+    @response = @response output
+    with result sets none;
 
---select @response;
+select @response;
 
-drop table if exists #j;
-select * into #j from openjson(@response, '$.result.choices') c;
+select json_value(@response, '$.result.choices[0].message.content');
 
-select [key], [value] from openjson(( 
-select t.value from #j c cross apply openjson(c.value, '$.message') t
-where t.[key] = 'content'
-))
 
