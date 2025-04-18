@@ -131,6 +131,7 @@ cross apply
         thoughts nvarchar(max)
     ) as sr
 
+
 -- Join back to original products table
 select 
     p.[id], 
@@ -140,7 +141,9 @@ select
     p.[category],
     sr.thoughts
 from 
-    openjson(@response, '$.result.choices[0].message') with (
+    #r
+cross apply
+    openjson(response, '$.result.choices[0].message') with (
         content nvarchar(max) '$.content'
     ) m
 cross apply
