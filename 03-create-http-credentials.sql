@@ -21,3 +21,6 @@ end
 go
 
 */
+
+select * from sys.database_scoped_credentials where [name] = '<OPENAI_URL>'
+go

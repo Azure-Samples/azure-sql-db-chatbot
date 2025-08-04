@@ -49,6 +49,8 @@ Make sure to replace the `<STORAGE_ACCOUNT>` and `<SAS_TOKEN>` placeholders with
 
 Run each section (each section starts with a comment) separately. At the end of the process (will take up to a couple of minutes) you will have all the CSV data imported in the `walmart_ecommerce_product_details` table.
 
+Vectors will be automatically converted to the new `vector` data type, which is used to efficiently store vector embeddings in Azure SQL Database. 
+
 ### Create OpenAI models.
 
 Make sure you have an [Azure OpenAI](https://learn.microsoft.com/en-us/azure/ai-services/openai/overview) resource created in your Azure subscription. Withi the OpenAI resource create two models:
@@ -69,17 +71,13 @@ Run the script to create the HTTP Credential.
 
 The HTTP Crential will be safely stored in the Azure SQL Database and will be used to access the OpenAI API without exposing the API Key.
 
-### Store vectors in native binary format
-
-To allow effienct searching of the vectors, vectors must be converted from the text format to the binary format. Use the `./04-convert-to-native-vectors.sql` to store the vectors in the binary format. Run the script to store the vectors in the binary format.
-
 ### Transform the search text into a vector using OpenAI
 
-Now that the data is ready, you can use the OpenAI API to transform the search text into a vector. Use the `./05-get-search-vector.sql` to transform the search text into a vector. Replace the `<OPENAI_URL>` with the OpenAI URL endpoint used before and run the script to transform the search text into a vector.
+Now that the data is ready, you can use the OpenAI API to transform the search text into a vector. Use the `./04-get-search-vector.sql` to transform the search text into a vector. Replace the `<OPENAI_URL>` with the OpenAI URL endpoint used before and run the script to transform the search text into a vector.
 
 ### Find products related to the search text 
 
-In order to send to GPT only the relevant products, so that it can provide better answers, you can use the vector similarity search to find the most similar products to the search text. Use the `./06-get-similar-item.sql` to find the most similar products to the search text. Run the script so that the most similar products to the search text are found.
+In order to send to GPT only the relevant products, so that it can provide better answers, you can use the vector similarity search to find the most similar products to the search text. Use the `./05-get-similar-item.sql` to find the most similar products to the search text. Run the script so that the most similar products to the search text are found.
 
 ### Use GPT to ask questions about the products
 
@@ -93,7 +91,7 @@ Products are provided in an assitant message using a JSON Array with the followi
 
 The prompt also clearly specifies what results are expected from the AI model. 
 
-The first script `07-chat-with-data.sql` will return the result as a natural language text, that is ideal if you are building a chatbot experience. The second script `08-chat-with-data-structured-output.sql` will return the result in JSON format, using the new "structured output" feature availale in the latest LLM models.
+The first script `06-chat-with-data.sql` will return the result as a natural language text, that is ideal if you are building a chatbot experience. The second script `07-chat-with-data-structured-output.sql` will return the result in JSON format, using the new "structured output" feature availale in the latest LLM models.
 
 Run the script to ask questions about the products. Here's an example of a question and the answer from the AI model:
 
@@ -123,6 +121,11 @@ Here are the top ten products that would be great for organizing a birthday part
 
 Impressive! Everything happened on your own data, and right in the Azure SQL Database.
 
+### Add more data
+
+You can add more data to the `walmart_ecommerce_product_details` table by simply inserting new rows, as shown in the file `09-new-data.sql`. To generate the embeddings, you can use the `08-get-embedding.sql` script that create a stored procedure that easily generates the embeddings for the requested data. If you are using SQL Server 2025, you can use the new `AI_GENERATE_EMBEDDINGS` function instead. 
+
+Re-run the sample from script `04-get-search-vector.sql` to test the new data as see how the AI model is able to answer questions about the new products.
 
 ## Conclusion
 

@@ -1,7 +1,7 @@
 /*
     Transform the search text into a vector using OpenAI's embeddings model
 */
-declare @text nvarchar(max) = 'what are the best products for organizing a birthday party for a teenager girl?'
+declare @text nvarchar(max) = 'anything for a teenager boy passionate about racing cars? he owns an XBOX, he likes to build stuff'
 
 declare @retval int, @response nvarchar(max);
 declare @payload nvarchar(max);

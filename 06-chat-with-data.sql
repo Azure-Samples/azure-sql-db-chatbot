@@ -1,4 +1,4 @@
-declare @request nvarchar(max) = 'what are the best products for organizing a birthday party for a teenager girl?'
+declare @request nvarchar(max) = 'anything for a teenager boy passionate about racing cars? he owns an XBOX, he likes to build stuff'
 
 declare @products json =
 (

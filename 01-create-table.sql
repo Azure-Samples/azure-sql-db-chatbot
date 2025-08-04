@@ -16,6 +16,6 @@ create table [dbo].[walmart_ecommerce_product_details]
 	[category] [nvarchar](1000) null,
 	[postal_code] [nvarchar](10) null,
 	[available] [nvarchar](10) not null,
-	[embedding] [nvarchar](max) null
+	[embedding] [vector](1536) null
 )
 go

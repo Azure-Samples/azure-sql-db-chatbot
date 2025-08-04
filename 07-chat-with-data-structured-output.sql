@@ -1,4 +1,4 @@
-declare @request nvarchar(max) = 'what are the best products for organizing a birthday party for a teenager girl?'
+declare @request nvarchar(max) = 'anything for a teenager boy passionate about racing cars? he owns an XBOX, he likes to build stuff'
 
 declare @products json =
 (
@@ -23,11 +23,12 @@ declare @prompt nvarchar(max) = json_object(
                 Products are provided in an assitant message using a JSON Array with the following format: [{id, name, description}].                 
                 Use only the provided products to help you answer the question.        
                 Use only the information available in the provided JSON to answer the question.
-                Return the top ten products that best answer the question.
+                Return up to top ten products that best answer the question. Return less than that ten products if not all products fit the request.
+                Don''t return products that are not relevant with the ask or that don''t comply with user request.
                 Make sure to use details, notes, and description that are provided in each product are used only with that product.                
                 If the question cannot be answered by the provided samples, don''t return any result.
                 If asked question is about topics you don''t know, don''t return any result.
-                If no products are provided, don''t return any result.                
+                If no products are provided, don''t return any result.                    
             '
         ),
         json_object(
@@ -49,7 +50,7 @@ declare @prompt nvarchar(max) = json_object(
     'stop': null
 );
 
-
+-- Define structured output JSON schema
 declare @js nvarchar(max) = N'{
     "type": "json_schema",
     "json_schema": {
