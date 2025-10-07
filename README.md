@@ -4,11 +4,11 @@ In this repo you will find a step-by-step guide on how to use Azure SQL Database
 
 ![Azure SQL DB - Retrieval Augmented Generation (RAG) with OpenAI](./assets/azure-sql-rag.png)
 
-# Classic or Native?
+## Classic or Native?
 
 Azure SQL database can be used to easily and quickly perform vector similarity search. There are two options for this: a native option and a classic option.
 
-The **native option** is to use the new [Vector Functions](https://learn.microsoft.com/en-us/sql/t-sql/functions/vector-functions-transact-sql?view=azuresqldb-current), recently introduced in Azure SQL database. Vector Functions are a set of functions that can be used to perform vector operations directly in the database. 
+The **native option** is to use the new [Vector Functions](https://learn.microsoft.com/en-us/sql/t-sql/functions/vector-functions-transact-sql?view=azuresqldb-current), recently introduced in Azure SQL database. Vector Functions are a set of functions that can be used to perform vector operations directly in the database.
 
 ![getting embeddings from OpenAI via T-SQL](assets/azure-sql-cosine-similarity-vector-type.gif)
 
@@ -46,9 +46,9 @@ Make sure to replace the `<STORAGE_ACCOUNT>` and `<SAS_TOKEN>` placeholders with
 
 Run each section (each section starts with a comment) separately. At the end of the process (will take up to a couple of minutes) you will have all the CSV data imported in the `walmart_ecommerce_product_details` table.
 
-Vectors will be automatically converted to the new `vector` data type, which is used to efficiently store vector embeddings in Azure SQL Database. 
+Vectors will be automatically converted to the new `vector` data type, which is used to efficiently store vector embeddings in Azure SQL Database.
 
-### Create OpenAI models.
+### Create OpenAI models
 
 Make sure you have an [Azure OpenAI](https://learn.microsoft.com/en-us/azure/ai-services/openai/overview) resource created in your Azure subscription. Withi the OpenAI resource create two models:
 
@@ -72,21 +72,21 @@ The HTTP Crential will be safely stored in the Azure SQL Database and will be us
 
 Now that the data is ready, you can use the OpenAI API to transform the search text into a vector. Use the `./04-get-search-vector.sql` to transform the search text into a vector. Replace the `<OPENAI_URL>` with the OpenAI URL endpoint used before and run the script to transform the search text into a vector.
 
-### Find products related to the search text 
+### Find products related to the search text
 
 In order to send to GPT only the relevant products, so that it can provide better answers, you can use the vector similarity search to find the most similar products to the search text. Use the `./05-get-similar-item.sql` to find the most similar products to the search text. Run the script so that the most similar products to the search text are found.
 
 ### Use GPT to ask questions about the products
 
-Now that the most similar products to the search text are found, you can use the GPT model to ask questions about the products. Use the `./07-chat-with-data.sql` to ask questions about the products. Azure SQL will connect to OpenAI via REST call, so replace the `<OPENAI_URL>` with the OpenAI URL endpoint used before. 
+Now that the most similar products to the search text are found, you can use the GPT model to ask questions about the products. Use the `./07-chat-with-data.sql` to ask questions about the products. Azure SQL will connect to OpenAI via REST call, so replace the `<OPENAI_URL>` with the OpenAI URL endpoint used before.
 
-Note the how the prompt is telling the AI model how to behave and how it should expect the data to be structured. 
+Note the how the prompt is telling the AI model how to behave and how it should expect the data to be structured.
 
 ```text
 Products are provided in an assitant message using a JSON Array with the following format: [{id, name, description}].
 ```
 
-The prompt also clearly specifies what results are expected from the AI model. 
+The prompt also clearly specifies what results are expected from the AI model.
 
 The first script `06-chat-with-data.sql` will return the result as a natural language text, that is ideal if you are building a chatbot experience. The second script `07-chat-with-data-structured-output.sql` will return the result in JSON format, using the new "structured output" feature availale in the latest LLM models.
 
@@ -120,7 +120,7 @@ Impressive! Everything happened on your own data, and right in the Azure SQL Dat
 
 ### Add more data
 
-You can add more data to the `walmart_ecommerce_product_details` table by simply inserting new rows, as shown in the file `09-new-data.sql`. To generate the embeddings, you can use the `08-get-embedding.sql` script that create a stored procedure that easily generates the embeddings for the requested data. If you are using SQL Server 2025, you can use the new `AI_GENERATE_EMBEDDINGS` function instead. 
+You can add more data to the `walmart_ecommerce_product_details` table by simply inserting new rows, as shown in the file `09-new-data.sql`. To generate the embeddings, you can use the `08-get-embedding.sql` script that create a stored procedure that easily generates the embeddings for the requested data. If you are using SQL Server 2025, you can use the new `AI_GENERATE_EMBEDDINGS` function instead.
 
 Re-run the sample from script `04-get-search-vector.sql` to test the new data as see how the AI model is able to answer questions about the new products.
 
