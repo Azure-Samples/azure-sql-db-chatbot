@@ -8,12 +8,9 @@ In this repo you will find a step-by-step guide on how to use Azure SQL Database
 
 Azure SQL database can be used to easily and quickly perform vector similarity search. There are two options for this: a native option and a classic option.
 
-The **native option** is to use the new Vector Functions, recently introduced in Azure SQL database. Vector Functions are a set of functions that can be used to perform vector operations directly in the database. 
+The **native option** is to use the new [Vector Functions](https://learn.microsoft.com/en-us/sql/t-sql/functions/vector-functions-transact-sql?view=azuresqldb-current), recently introduced in Azure SQL database. Vector Functions are a set of functions that can be used to perform vector operations directly in the database. 
 
-> [!NOTE]  
-> Vector Functions are in Public Preview. Learn the details about vectors in Azure SQL here: https://aka.ms/azure-sql-vector-public-preview
-
-![](assets/azure-sql-cosine-similarity-vector-type.gif)
+![getting embeddings from OpenAI via T-SQL](assets/azure-sql-cosine-similarity-vector-type.gif)
 
 The **classic option** is to use the classic T-SQL to perform vector operations, with the support for columnstore indexes for getting good performances.
 
@@ -85,7 +82,7 @@ Now that the most similar products to the search text are found, you can use the
 
 Note the how the prompt is telling the AI model how to behave and how it should expect the data to be structured. 
 
-```
+```text
 Products are provided in an assitant message using a JSON Array with the following format: [{id, name, description}].
 ```
 
@@ -95,13 +92,13 @@ The first script `06-chat-with-data.sql` will return the result as a natural lan
 
 Run the script to ask questions about the products. Here's an example of a question and the answer from the AI model:
 
-```
+```text
 what are the best products for organizing a birthday party for a teenager girl?
 ```
 
 and the answser (restructed from JSON format) is
 
-```
+```text
 Here are the top ten products that would be great for organizing a birthday party for a teenage girl:
 
 1. **Princess Candle Set - Party Supplies** 
