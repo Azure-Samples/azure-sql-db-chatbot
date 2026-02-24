@@ -1,10 +1,3 @@
--- Take a look at the vector
-select top(1)
-	json_query(response, '$.result.data[0].embedding') 
-from 
-	dbo.http_response
-go
-
 -- How many products overall?
 select count(*) from dbo.[walmart_ecommerce_product_details]
 go
@@ -14,12 +7,10 @@ drop table if exists dbo.similar_items
 declare @top int = 50
 declare @min_similarity decimal(19,16) = 0.75
 drop table if exists ##s;
-declare @qv vector(1536) = (
-	select top(1)
-		cast(json_query(response, '$.result.data[0].embedding') as vector(1536)) as query_vector
-	from 
-		dbo.http_response
-)
+
+declare @text nvarchar(max) = 'anything for a teenager boy passionate about racing cars? he owns an XBOX, he likes to build stuff'
+declare @qv vector(1536) = ai_generate_embeddings(@text use model Ada2Embeddings)
+
 select top(@top)    
     p.id,
     vector_distance('cosine', @qv, embedding) as distance,

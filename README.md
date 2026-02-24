@@ -50,14 +50,14 @@ Vectors will be automatically converted to the new `vector` data type, which is 
 
 ### Create OpenAI models
 
-Make sure you have an [Azure OpenAI](https://learn.microsoft.com/en-us/azure/ai-services/openai/overview) resource created in your Azure subscription. Withi the OpenAI resource create two models:
+Make sure you have an [Azure OpenAI](https://learn.microsoft.com/en-us/azure/ai-services/openai/overview) resource created in your Azure subscription. Within the OpenAI resource create two models:
 
 - `embeddings`, using the `text-embedding-ada-002` model
 - `gpt-4o`, using the `gpt-4o` model (minimum version required: 2024-08-06 as [structured output is needed](https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/structured-outputs?tabs=python-secure%2Cdotnet-entra-id&pivots=programming-language-python#supported-models))
 
 Then get the OpenAI URL Endpoint and API Key as they will be needed in the next step.
 
-### Create HTTP Credentials
+### Create HTTP Credentials and External Model
 
 Create a new HTTP Credential to access the OpenAI API. Use the `./03-create-credential.sql` to create the HTTP Credential. Replace the `<OPENAI_URL>` and `<OPENAI_API_KEY>` placeholders with the correct values for your environment:
 
@@ -67,6 +67,8 @@ Create a new HTTP Credential to access the OpenAI API. Use the `./03-create-cred
 Run the script to create the HTTP Credential.
 
 The HTTP Crential will be safely stored in the Azure SQL Database and will be used to access the OpenAI API without exposing the API Key.
+
+You can then create an External Model in Azure SQL Database that uses the HTTP Credential to access the OpenAI API. Use the `./04-create-external-model.sql` to create the External Model. Replace the `<OPENAI_URL>` placeholder with the OpenAI URL endpoint from the previous step and the <DEPLOYMENT_NAME> with the name of the deployment you created in the previous step for the embedding model (`embeddings` in this example).
 
 ### Transform the search text into a vector using OpenAI
 
@@ -122,7 +124,7 @@ Impressive! Everything happened on your own data, and right in the Azure SQL Dat
 
 You can add more data to the `walmart_ecommerce_product_details` table by simply inserting new rows, as shown in the file `09-new-data.sql`. To generate the embeddings, you can use the `08-get-embedding.sql` script that create a stored procedure that easily generates the embeddings for the requested data. If you are using SQL Server 2025, you can use the new `AI_GENERATE_EMBEDDINGS` function instead.
 
-Re-run the sample from script `04-get-search-vector.sql` to test the new data as see how the AI model is able to answer questions about the new products.
+Re-run the sample from script `05-get-similar-items.sql` to test the new data as see how the AI model is able to answer questions about the new products.
 
 ## Conclusion
 
