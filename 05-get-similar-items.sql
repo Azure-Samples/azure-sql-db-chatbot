@@ -1,4 +1,5 @@
 -- How many products overall?
+delete from [dbo].[walmart_ecommerce_product_details] where id >= 90000;
 select count(*) from dbo.[walmart_ecommerce_product_details]
 go
 
